@@ -33,35 +33,50 @@ const UserSchema = new mongoose.Schema(
     }, { timestamps: true }
 );
 
-UserSchema.pre('save', async function (next) {
+// UserSchema.pre('save', async function (next) {
+//     try {
+//         let user = this;
+
+//         if (!user.user_password) {
+//             return next();
+//         }
+
+//         bcrypt.genSalt(10, function (err, salt) {
+//             if (err) {
+//                 return next(err);
+//             }
+
+//             bcrypt.hash(user.user_password, salt, (err, hash) => {
+//                 if (err) {
+//                     return next(err);
+//                 }
+
+//                 user.user_password = hash;
+//                 console.log("user", user);
+
+//                 next();
+//             });
+//         });
+//     } catch (error) {
+//         console.error(error);
+//     }
+
+// });
+
+UserSchema.pre("save", async function (next) {
     try {
-        let user = this;
 
-        if (!user.user_password) {
-            return next();
-        }
+        const hash = await bcrypt.hash(this.user_password, 10)
+        this.user_password = hash;
 
-        bcrypt.genSalt(10, function (err, salt) {
-            if (err) {
-                return next(err);
-            }
-
-            bcrypt.hash(user.user_password, salt, (err, hash) => {
-                if (err) {
-                    return next(err);
-                }
-
-                user.user_password = hash;
-                console.log("user", user);
-
-                next();
-            });
-        });
+        console.log(hash);
+        next();
     } catch (error) {
         console.error(error);
     }
 
-});
+
+})
 
 const Users = mongoose.model("Users", UserSchema);
 
