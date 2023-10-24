@@ -24,6 +24,7 @@ const createNewEstablishment = async (req, res) => {
 
     } catch (error) {
         console.error(error);
+        return res.status(500).send(error.message);
     }
 }
 
@@ -34,27 +35,34 @@ const listAllEstabilishments = async (req, res) => {
         return res.status(200).send(listAllEstabilishment);
     } catch (error) {
         console.error(error);
+        return res.status(500).send(error.message);
     }
 }
 
 const estabilishmentUpdate = async (req, res) => {
-    const { id } = req.params;
-    const { establishment_name, establishment_rating, establishment_address, establishment_price } = req.body;
+    try {
 
-    const estabilishmentDetails = {
-        establishment_name, establishment_rating, establishment_address, establishment_price
+        const { id } = req.params;
+        const { establishment_name, establishment_rating, establishment_address, establishment_price } = req.body;
+
+        const estabilishmentDetails = {
+            establishment_name, establishment_rating, establishment_address, establishment_price
+        }
+
+        const updatedEstabilishment = await Estabilishment.findByIdAndUpdate({
+            _id: id
+        },
+            estabilishmentDetails,
+            { new: true }
+        )
+
+        updatedEstabilishment.save(id);
+
+        return res.status(200).send(updatedEstabilishment)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(error.message);
     }
-
-    const updatedEstabilishment = await Estabilishment.findByIdAndUpdate({
-        _id: id
-    },
-        estabilishmentDetails,
-        { new: true }
-    )
-
-    updatedEstabilishment.save(id);
-
-    return res.status(200).send(updatedEstabilishment)
 }
 
 const deleteEstabilishment = async (req, res) => {
@@ -69,6 +77,7 @@ const deleteEstabilishment = async (req, res) => {
         return res.status(200).send({ msg: "Estabelecimento removido com sucesso!" })
     } catch (error) {
         console.error(error);
+        return res.status(500).send(error.message);
     }
 }
 
