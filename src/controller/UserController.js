@@ -30,11 +30,24 @@ const createNewUser = async (req, res) => {
 const listAllUsers = async (req, res) => {
     try {
         const listAllUsers = await User.find();
+        return res.status(200).send(listAllUsers)
+    } catch (error) {
+        console.error(error);
+        return res.status(500).send(error.message);
+    }
+}
+
+const findUserById = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const listAllUsers = await User.findById({ _id: id })
+
         // console.log(listAllUsers);
         return res.status(200).send(listAllUsers)
 
     } catch (error) {
         console.error(error);
+        return res.status(500).send(error.message);
     }
 }
 
@@ -56,6 +69,10 @@ const userUpdate = async (req, res) => {
             userDetails,
             { new: true }
         )
+
+        if (!updatedUser) {
+            return res.status(401).send({ msg: "Usuário não encontrada" })
+        }
 
         updatedUser.save(id);
         return res.status(200).send(updatedUser)
@@ -80,12 +97,14 @@ const userDelete = async (req, res) => {
         return res.status(200).send({ msg: "Usuário removido com sucesso." })
     } catch (error) {
         console.error(error);
+        return res.status(500).send(error.message);
     }
 }
 
 module.exports = {
     createNewUser,
     listAllUsers,
+    findUserById,
     userUpdate,
     userDelete
 }
