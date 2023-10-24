@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
-const { createNewEstablishment, listAllEstabilishments, estabilishmentUpdate, deleteEstabilishment } = require("../controller/EstablishmentController");
+const {
+    createNewEstablishment,
+    listAllEstabilishments,
+    estabilishmentUpdate,
+    deleteEstabilishment
+} = require("../controller/EstablishmentController");
 
 router.post("/", createNewEstablishment);
 router.get("/", listAllEstabilishments);
