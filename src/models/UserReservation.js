@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const { v4: uuid } = require("uuid")
 
-const UserSchema = new mongoose.Schema(
+const UserReservationsSchema = new mongoose.Schema(
     {
         // reservation_id: {
         //     type: String,
@@ -10,12 +10,12 @@ const UserSchema = new mongoose.Schema(
         //         uuid.v1()
         //     }
         // },
-        hotel_id: {
+        estabilishment_id: {
             type: String,
             require: true
         },
         user_id: {
-            type: Number,
+            type: String,
             require: true
         },
         start_reservation: {
@@ -30,12 +30,12 @@ const UserSchema = new mongoose.Schema(
     }, { timestamps: true }
 );
 
-UserSchema.pre('save', async (next) => {
-    const hash = await bcrypt.hash(this.user_password, 10);
-    this.user_password = hash;
-    next();
-});
+// UserSchema.pre('save', async (next) => {
+//     const hash = await bcrypt.hash(this.user_password, 10);
+//     this.user_password = hash;
+//     next();
+// });
 
-const Users = mongoose.model("Users", UserSchema);
+const UserReservations = mongoose.model("UserReservations", UserReservationsSchema);
 
-module.exports = Users;
+module.exports = UserReservations;
